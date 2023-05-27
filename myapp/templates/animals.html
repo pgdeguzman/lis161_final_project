@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>List of {{ pet_type_template }}</h1>
+<ul>
+    {% for pet in pets_template %}
+    <li><a href="/animals/{{  pet_type_template  }}/{{  loop.index0  }}">{{  pet.name  }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
