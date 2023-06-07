@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1> {{  pet_profile.name  }} </h1>
-<img src="{{  pet_profile.url  }}" alt="">
-<p> {{  pet_profile.description  }} </p>
+<h1>{{ pet.name }}</h1>
+<img src="{{pet.url}}">
+<p>{{ pet.description }}</p>
 <ul>
-    {% if pet_profile.breed == "" %}
-    <li>Breed: No data available</li>
-    {% else %}
-    <li>Breed: {{  pet_profile.breed  }}</li>
+    {% if pet.breed %}
+    <li>Breed: {{ pet.breed }}</li>
     {% endif %}
-    <li>Age: {{ pet_profile.age  }}</li>
+    <li>Age: {{ pet.age }}</li>
 </ul>
+<form action="{{ url_for('modify') }}" method="post">
+    <input type="hidden" name="pet_id" value="{{ pet.id }}">
+    <input class="btn btn-secondary" type="submit" name="modify" value="edit"></input>
+    <input class="btn btn-danger" type="submit" name="modify" value="delete"></input>
+</form>
 {% endblock %}

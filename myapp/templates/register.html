@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Register a Pet up for Adoption</h1>
+<form action="{{ url_for('processing') }}" method="post">
+    <label for="p_type">Type of Pet:</label>
+    <select name="pet_type" id="p_type" required>
+        <option disabled selected value>...</option>
+        <option value="dogs">Dog</option>
+        <option value="cats">Cat</option>
+        <option value="rabbits">Rabbit</option>
+    </select><br><br>
+    <label for="p_name">Name of Pet:</label>
+    <input type="text" name="pet_name" id="p_name" required><br><br>
+    <label for="p_breed">Breed:</label>
+    <input type="text" name="pet_breed" id="p_breed"><br><br>
+    <label for="p_age">Age:</label>
+    <input type="number" name="pet_age" id="p_age"><br><br>
+    <label for="p_url">Image URL:</label>
+    <input type="url" name="pet_url" id="p_url"><br>
+    <textarea name="pet_desc" placeholder="Tell something about your pet..." cols="30" rows="10"></textarea><br>
+    <input type="submit" value="Register!">
+</form>
+{% endblock %}

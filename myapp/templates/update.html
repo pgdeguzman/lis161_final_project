@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Register a Pet up for Adoption</h1>
+<form action="{{ url_for('update') }}" method="post">
+    <input type="hidden" name="pet_id" value="{{ pet.id }}">
+    <label for="p_type">Type of Pet:</label>
+    <select name="pet_type" id="p_type" required>
+        <option disabled selected value>...</option>
+        {% if pet.animal_type == "dogs" %}
+        <option value="dogs" selected>Dog</option>
+        <option value="cats">Cat</option>
+        <option value="rabbits">Rabbit</option>
+        {% elif pet.animal_type == "cats" %}
+        <option value="dogs">Dog</option>
+        <option value="cats" selected>Cat</option>
+        <option value="rabbits">Rabbit</option>
+        {% elif pet.animal_type == "rabbits" %}
+        <option value="dogs">Dog</option>
+        <option value="cats">Cat</option>
+        <option value="rabbits" selected>Rabbit</option>
+        {% endif %}
+    </select><br><br>
+    <label for="p_name">Name of Pet:</label>
+    <input type="text" name="pet_name" id="p_name" value="{{ pet.name }}" required><br><br>
+    <label for="p_breed">Breed:</label>
+    <input type="text" name="pet_breed" id="p_breed" value="{{ pet.breed }}"><br><br>
+    <label for="p_age">Age:</label>
+    <input type="number" name="pet_age" id="p_age" value="{{ pet.age }}"><br><br>
+    <label for="p_url">Image URL:</label>
+    <input type="url" name="pet_url" id="p_url" value="{{ pet.url }}"><br>
+    <textarea name="pet_desc" cols="30" rows="10">{{ pet.description }}</textarea><br>
+    <input type="submit" value="Update!">
+</form>
+{% endblock %}
