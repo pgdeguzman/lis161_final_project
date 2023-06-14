@@ -49,9 +49,13 @@ def modify():
     # if delete, then do this
     elif request.form["modify"] == "delete":
         # retrieve record using id
+        pet_id = request.form["pet_id"]
+        pet = read_pet_by_pet_id(pet_id)
         # delete the record
+        delete_pet({'pet_id': pet_id})
         # redirect user to pet list by pet type
-        pass
+        return redirect(url_for('animals', pet_type=pet['animal_type']))
+        
 
 @app.route('/update', methods=['post'])
 def update():

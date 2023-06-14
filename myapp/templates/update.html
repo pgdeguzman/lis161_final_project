@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Register a Pet up for Adoption</h1>
+<h1>Update the details of the Pet</h1>
 <form action="{{ url_for('update') }}" method="post">
     <input type="hidden" name="pet_id" value="{{ pet.id }}">
     <label for="p_type">Type of Pet:</label>
@@ -30,6 +30,6 @@
     <label for="p_url">Image URL:</label>
     <input type="url" name="pet_url" id="p_url" value="{{ pet.url }}"><br>
     <textarea name="pet_desc" cols="30" rows="10">{{ pet.description }}</textarea><br>
-    <input type="submit" value="Update!">
+    <input type="submit" value="Update">
 </form>
 {% endblock %}

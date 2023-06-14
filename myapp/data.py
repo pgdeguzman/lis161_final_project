@@ -42,10 +42,22 @@ def insert_pet(pet_data):
 def update_pet(pet_data):
     conn, cur = connect_to_db(db_path)
     query = "UPDATE pets SET animal_type=?, name=?, age=?, breed=?, description=?, url=? WHERE id=?"
-    values = (pet_data['pet_type'], pet_data['name'],
-              pet_data['age'], pet_data['breed'],
-              pet_data['description'], pet_data['url'],
+    values = (pet_data['pet_type'],
+              pet_data['name'],
+              pet_data['age'],
+              pet_data['breed'],
+              pet_data['description'],
+              pet_data['url'],
               pet_data['pet_id'])
+    cur.execute(query, values)
+    conn.commit()
+    conn.close()
+
+# This function deletes the record
+def delete_pet(pet_data):
+    conn, cur = connect_to_db(db_path)
+    query = "DELETE FROM pets WHERE id=?"
+    values = (pet_data['pet_id'], )
     cur.execute(query, values)
     conn.commit()
     conn.close()
