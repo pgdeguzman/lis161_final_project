@@ -1,3 +1,7 @@
 h1 {
     color:lightseagreen; 
 }
+
+#pet_image {
+    height: 300px;
+}

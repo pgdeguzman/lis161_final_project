@@ -54,3 +54,27 @@ def delete_pet(pet_data):
     cur.execute(query, values)
     conn.commit()
     conn.close()
+
+def perform_search(query, criteria):
+    conn, cur = connect_to_db(db_path)
+
+    if criteria == "animal_type":
+        column_name = "animal_type"
+    elif criteria == "breed":
+        column_name = "breed"
+    elif criteria == "name":
+        column_name = "name"
+    elif criteria == "age":
+        column_name = "age"
+    else:
+        column_name = None
+
+    if column_name:
+        search_query = f"%{query}%"
+        cur.execute(f"SELECT * FROM pets WHERE {column_name} LIKE ?", (search_query,))
+        search_results = [dict(row) for row in cur.fetchall()]
+    else:
+        search_results = []
+
+    conn.close()
+    return search_results

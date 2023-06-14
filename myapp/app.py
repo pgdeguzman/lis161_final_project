@@ -7,6 +7,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/animals/<pet_type>')
 def animals(pet_type):
     pets_list = read_pets_by_pet_type(pet_type)
@@ -15,14 +19,13 @@ def animals(pet_type):
 @app.route('/animals/<int:pet_id>')
 def pet(pet_id):
     pet = read_pet_by_pet_id(pet_id)
-    return render_template("pet.html",pet=pet)
-
+    return render_template("pet.html", pet=pet)
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
-@app.route('/processed', methods=['post'])
+@app.route('/processed', methods=['POST'])
 def processing():
     pet_data = {
         "pet_type": request.form['pet_type'],
@@ -35,8 +38,7 @@ def processing():
     insert_pet(pet_data)
     return redirect(url_for('animals', pet_type=request.form['pet_type']))
 
-
-@app.route('/modify', methods=['post'])
+@app.route('/modify', methods=['POST'])
 def modify():
     if request.form["modify"] == "edit":
         pet_id = request.form["pet_id"] 
@@ -47,12 +49,11 @@ def modify():
         pet = read_pet_by_pet_id(pet_id)
         delete_pet({'pet_id': pet_id})
         return redirect(url_for('animals', pet_type=pet['animal_type']))
-        
 
-@app.route('/update', methods=['post'])
+@app.route('/update', methods=['POST'])
 def update():
     pet_data = {
-        "pet_id" : request.form["pet_id"],
+        "pet_id": request.form["pet_id"],
         "pet_type": request.form['pet_type'],
         "name": request.form['pet_name'],
         "breed": request.form['pet_breed'],
@@ -61,7 +62,14 @@ def update():
         "url": request.form['pet_url']
     }
     update_pet(pet_data)
-    return redirect(url_for('pet',pet_id = request.form['pet_id']))
+    return redirect(url_for('pet', pet_id=request.form['pet_id']))
+
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    criteria = request.args.get('criteria')
+    search_results = perform_search(query, criteria)
+    return render_template('search.html', query=query, criteria=criteria, results=search_results)
 
 if __name__ == "__main__":
     app.run(debug=True)
