@@ -1,24 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Register a Pet up for Adoption</h1>
-<form action="{{ url_for('processing') }}" method="post">
-    <label for="p_type">Type of Pet:</label>
+<h1>List your favorites in here!</h1>
+<form action="{{ url_for('processing') }}" method="post"> <br></br>
+
+    <label for="p_type">Size:</label>
     <select name="pet_type" id="p_type" required>
         <option disabled selected value>...</option>
-        <option value="dogs">Dog</option>
-        <option value="cats">Cat</option>
-        <option value="rabbits">Rabbit</option>
+        <option value="isha"> S: 250 PHP</option>
+        <option value="arol">M: 350 PHP</option>
+        <option value="luis"> L: 400 PHP</option>
     </select><br><br>
-    <label for="p_name">Name of Pet:</label>
-    <input type="text" name="pet_name" id="p_name" required><br><br>
-    <label for="p_breed">Breed:</label>
-    <input type="text" name="pet_breed" id="p_breed"><br><br>
-    <label for="p_age">Age:</label>
-    <input type="number" name="pet_age" id="p_age"><br><br>
-    <label for="p_url">Image URL:</label>
-    <input type="url" name="pet_url" id="p_url"><br>
-    <textarea name="pet_desc" placeholder="Tell something about your pet..." cols="30" rows="10"></textarea><br>
-    <input type="submit" value="Register!">
+
+    <label for="p_name">Shirt Title:</label>
+    <select name="pet_type" id="p_type" required>
+        <option disabled selected value>...</option>
+        <option value="ahsi"> The Purple Flower </option>
+        <option value="lora"> The Shadow Tinge </option>
+        <option value="siul"> The Purple Bits </option>
+        <option value="owl"> The Natural Abyss </option>
+        <option value="kash"> The Boiling Blue </option>
+        <option value="lash"> Touch of a Purplish Naivety </option>
+    </select><br><br>
+
+    <label for="p_age">Date:</label>
+    <input type="text" name="pet_age" id="p_age" placeholder="mm/dd/yy"><br><br>
+    
+    <textarea name="pet_desc" placeholder="Tell what you like about the shirt" cols="30" rows="10"></textarea><br>
+    <input type="submit" value="Save">
 </form>
+
 {% endblock %}
+

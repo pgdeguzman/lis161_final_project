@@ -1,7 +1,102 @@
+# About page
 h1 {
-    color:lightseagreen; 
+    color: black; 
 }
+
+h1 {
+  font-size: 70px;
+  margin-bottom: -10px;
+}
+
+.homepage {
+    padding-right: 300;
+    padding-top: 50px;
+}
+
+body {
+    padding: 0px 200px 0px 200px;
+    background-color: #886DAF
+  }
+
+.about-page {
+    padding-bottom: 2%;
+    border-bottom-style: solid;
+}
+
+.indent {
+    padding-top:5%;
+    padding-left: 30%;
+}
+
+.indent1 {
+    padding-left: 30%;
+}
+
+ a:link {
+    color: black
+    }
+
+.free{
+  padding-top: 5px;
+  padding-bottom: 30px;
+  padding-right: 290px;
+  border-bottom-style: solid;
+}
+
+
+# PIKTYURS
+    <style>
+div.gallery {
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: content-box;
+}
+
+.responsive {
+  padding: 0 35px;
+  float: left;
+  width: 24.99999%;
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+
+
 
 #pet_image {
     height: 300px;
 }
+
