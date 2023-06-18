@@ -1,17 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data import *
+import os
+from data import * 
 
 app = Flask(__name__)
 
+picFolder = os.path.join('static','img')
+app.config['UPLOAD_FOLDER'] = picFolder
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    pic1 = os.path.join(app.config['UPLOAD_FOLDER'], 'shirt-1.jpg')
+    return render_template('index.html', user_image_=pic1) 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/animals/<pet_type>')
+@app.route('/animals/<pet_typ   e>')
 def animals(pet_type):
     pets_list = read_pets_by_pet_type(pet_type)
     return render_template("animals.html", pet_type=pet_type, pets=pets_list)
