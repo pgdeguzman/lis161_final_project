@@ -16,7 +16,7 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/animals/<pet_typ   e>')
+@app.route('/animals/<pet_type>')
 def animals(pet_type):
     pets_list = read_pets_by_pet_type(pet_type)
     return render_template("animals.html", pet_type=pet_type, pets=pets_list)
