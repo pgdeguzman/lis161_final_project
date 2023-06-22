@@ -1,80 +1,78 @@
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+import os
+from data import * 
 
-db_path = "pa.db"
+app = Flask(__name__)
 
-def connect_to_db(path):
-    conn = sqlite3.connect(path)
-    conn.row_factory = sqlite3.Row
-    return (conn, conn.cursor())
+picFolder = os.path.join('static','img')
+app.config['UPLOAD_FOLDER'] = picFolder
 
-def read_pets_by_pet_type(pet_type):
-    conn, cur = connect_to_db(db_path)
-    query = 'SELECT * FROM pets WHERE animal_type = ?'
-    value = pet_type
-    results = cur.execute(query,(value,)).fetchall()
-    conn.close()
-    return results
+@app.route('/')
+def index():
+    pic1 = os.path.join(app.config['UPLOAD_FOLDER'], 'shirt-1.jpg')
+    return render_template('index.html', user_image_=pic1) 
 
-def read_pet_by_pet_id(pet_id):
-    conn, cur = connect_to_db(db_path)
-    query = 'SELECT * FROM pets WHERE id = ?'
-    value = pet_id
-    result = cur.execute(query,(value,)).fetchone()
-    conn.close()
-    return result
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
-def insert_pet(pet_data):
-    conn, cur = connect_to_db(db_path)
-    query = 'INSERT INTO pets (animal_type, name, age, breed, description, url) VALUES (?,?,?,?,?,?)'
-    values = (pet_data['pet_type'], pet_data['name'],
-              pet_data['age'], pet_data['breed'],
-              pet_data['description'], pet_data['url'])
-    cur.execute(query,values)
-    conn.commit()
-    conn.close()
+@app.route('/products/<int:product_id>')
+def pet(product_id):
+    item = get_item_by_id(product_id)
+    return render_template("item.html", item=item)
 
-def update_pet(pet_data):
-    conn, cur = connect_to_db(db_path)
-    query = "UPDATE pets SET animal_type=?, name=?, age=?, breed=?, description=?, url=? WHERE id=?"
-    values = (pet_data['pet_type'],
-              pet_data['name'],
-              pet_data['age'],
-              pet_data['breed'],
-              pet_data['description'],
-              pet_data['url'],
-              pet_data['pet_id'])
-    cur.execute(query, values)
-    conn.commit()
-    conn.close()
+@app.route('/products/<product_type>')
+def animals(product_type):
+    item_list = get_all_items(product_type)
+    return render_template("products.html", product_type=product_type, items=item_list)
 
-def delete_pet(pet_data):
-    conn, cur = connect_to_db(db_path)
-    query = "DELETE FROM pets WHERE id=?"
-    values = (pet_data['pet_id'], )
-    cur.execute(query, values)
-    conn.commit()
-    conn.close()
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
-def perform_search(query, criteria):
-    conn, cur = connect_to_db(db_path)
+@app.route('/processed', methods=['POST'])
+def processing():
+    product_data = {
+        "name": request.form['p_name'],
+        "price": request.form['p_price'],
+        "size": request.form['p_size'],
+        "image": request.form['p_url'],
+        "desc": request.form['p_desc'],
+    }
+    insert_item(product_data)
+    return redirect(url_for('products'))
 
-    if criteria == "animal_type":
-        column_name = "animal_type"
-    elif criteria == "breed":
-        column_name = "breed"
-    elif criteria == "name":
-        column_name = "name"
-    elif criteria == "age":
-        column_name = "age"
-    else:
-        column_name = None
+@app.route('/modify', methods=['POST'])
+def modify():
+    if request.form["modify"] == "edit":
+        product_id = request.form["product_id"] 
+        item = get_item_by_id(product_id)
+        return render_template('update.html', item=item)
+    elif request.form["modify"] == "delete":
+        product_id = request.form["product_id"]
+        item = get_item_by_id(product_id)
+        delete_item({'product_id': product_id})
+        return redirect(url_for('products'))
 
-    if column_name:
-        search_query = f"%{query}%"
-        cur.execute(f"SELECT * FROM pets WHERE {column_name} LIKE ?", (search_query,))
-        search_results = [dict(row) for row in cur.fetchall()]
-    else:
-        search_results = []
+@app.route('/update', methods=['POST'])
+def update():
+    product_data = {
+        "product_id": request.form['product_id'],
+        "name": request.form['p_name'],
+        "price": request.form['p_price'],
+        "size": request.form['p_size'],
+        "image": request.form['p_url'],
+        "desc": request.form['p_desc'],
+    }
+    update_item(product_data)
+    return redirect(url_for('item', product_id=request.form['product_id']))
 
-    conn.close()
-    return search_results
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    criteria = request.args.get('criteria')
+    search_results = perform_search(query, criteria)
+    return render_template('search.html', query=query, criteria=criteria, results=search_results)
+
+if __name__ == "__main__":
+    app.run(debug=True)
