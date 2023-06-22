@@ -51,7 +51,7 @@ def modify():
     elif request.form["modify"] == "delete":
         product_id = request.form["product_id"]
         item = get_item_by_id(product_id)
-        delete_pet({'product_id': product_id})
+        delete_item({'product_id': product_id})
         return redirect(url_for('products'))
 
 @app.route('/update', methods=['POST'])
