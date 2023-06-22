@@ -16,15 +16,15 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/animals/<pet_type>')
-def animals(pet_type):
-    pets_list = read_pets_by_pet_type(pet_type)
-    return render_template("animals.html", pet_type=pet_type, pets=pets_list)
+@app.route('/products/<int:product_id>')
+def pet(product_id):
+    item = get_item_by_id(product_id)
+    return render_template("item.html", item=item)
 
-@app.route('/animals/<int:pet_id>')
-def pet(pet_id):
-    pet = read_pet_by_pet_id(pet_id)
-    return render_template("pet.html", pet=pet)
+@app.route('/products/<product_type>')
+def animals(product_type):
+    item_list = get_all_items(product_type)
+    return render_template("products.html", product_type=product_type, items=item_list)
 
 @app.route('/register')
 def register():
@@ -32,42 +32,40 @@ def register():
 
 @app.route('/processed', methods=['POST'])
 def processing():
-    pet_data = {
-        "pet_type": request.form['pet_type'],
-        "name": request.form['pet_name'],
-        "breed": request.form['pet_breed'],
-        "age": request.form['pet_age'],
-        "description": request.form['pet_desc'],
-        "url": request.form['pet_url']
+    product_data = {
+        "name": request.form['p_name'],
+        "price": request.form['p_price'],
+        "size": request.form['p_size'],
+        "image": request.form['p_url'],
+        "desc": request.form['p_desc'],
     }
-    insert_pet(pet_data)
-    return redirect(url_for('animals', pet_type=request.form['pet_type']))
+    insert_item(product_data)
+    return redirect(url_for('products'))
 
 @app.route('/modify', methods=['POST'])
 def modify():
     if request.form["modify"] == "edit":
-        pet_id = request.form["pet_id"] 
-        pet = read_pet_by_pet_id(pet_id)
-        return render_template('update.html', pet=pet)
+        product_id = request.form["product_id"] 
+        item = get_item_by_id(product_id)
+        return render_template('update.html', item=item)
     elif request.form["modify"] == "delete":
-        pet_id = request.form["pet_id"]
-        pet = read_pet_by_pet_id(pet_id)
-        delete_pet({'pet_id': pet_id})
-        return redirect(url_for('animals', pet_type=pet['animal_type']))
+        product_id = request.form["product_id"]
+        item = get_item_by_id(product_id)
+        delete_pet({'product_id': product_id})
+        return redirect(url_for('products'))
 
 @app.route('/update', methods=['POST'])
 def update():
-    pet_data = {
-        "pet_id": request.form["pet_id"],
-        "pet_type": request.form['pet_type'],
-        "name": request.form['pet_name'],
-        "breed": request.form['pet_breed'],
-        "age": request.form['pet_age'],
-        "description": request.form['pet_desc'],
-        "url": request.form['pet_url']
+    product_data = {
+        "product_id": request.form['product_id'],
+        "name": request.form['p_name'],
+        "price": request.form['p_price'],
+        "size": request.form['p_size'],
+        "image": request.form['p_url'],
+        "desc": request.form['p_desc'],
     }
-    update_pet(pet_data)
-    return redirect(url_for('pet', pet_id=request.form['pet_id']))
+    update_item(product_data)
+    return redirect(url_for('item', product_id=request.form['product_id']))
 
 @app.route('/search')
 def search():
