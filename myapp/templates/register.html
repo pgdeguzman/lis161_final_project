@@ -1,34 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>List your favorites in here!</h1>
-<form action="{{ url_for('processing') }}" method="post"> <br></br>
-
-    <label for="p_type">Size:</label>
-    <select name="pet_type" id="p_type" required>
+<h1>Register an Item for listing</h1>
+<form action="{{ url_for('processing') }}" method="post">
+    <label for="p_size">Size of Apparel</label>
+    <select name="p_size" id="p_Size" required>
         <option disabled selected value>...</option>
-        <option value="isha"> S: 250 PHP</option>
-        <option value="arol">M: 350 PHP</option>
-        <option value="luis"> L: 400 PHP</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
     </select><br><br>
-
-    <label for="p_name">Shirt Title:</label>
-    <select name="pet_type" id="p_type" required>
-        <option disabled selected value>...</option>
-        <option value="ahsi"> The Purple Flower </option>
-        <option value="lora"> The Shadow Tinge </option>
-        <option value="siul"> The Purple Bits </option>
-        <option value="owl"> The Natural Abyss </option>
-        <option value="kash"> The Boiling Blue </option>
-        <option value="lash"> Touch of a Purplish Naivety </option>
-    </select><br><br>
-
-    <label for="date">Date:</label>
-    <input type="date" name="date" id="date" value="today" min="today"><br><br>
-    
-    <textarea name="pet_desc" placeholder="Tell what you like about the shirt" cols="30" rows="10"></textarea><br>
-    <input type="submit" value="Save">
+    <label for="p_name">Item Name:</label>
+    <input type="text" name="p_name" id="p_name" required><br><br>
+    <label for="p_price">Price:</label>
+    <input type="text" name="p_price" id="p_breed" required><br><br>
+    <label for="p_url">Image URL:</label>
+    <input type="url" name="p_url" id="p_url" required><br>
+    <label for="p_desc">Item Description:</label>
+    <textarea name="p_desc" placeholder="Say something about your product" cols="30" rows="10"></textarea><br>
+    <input type="submit" value="Register!">
 </form>
-
 {% endblock %}
-
