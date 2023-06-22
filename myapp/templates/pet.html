@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ pet.name }}</h1>
-<img src="{{pet.url}}" id="pet_image">
-<p>{{ pet.description }}</p>
+<h1>{{ item.Name }}</h1>
+<img src="{{item.Image}}" id="product_image">
 <ul>
-    {% if pet.breed %}
-    <li>Breed: {{ pet.breed }}</li>
-    {% endif %}
-    <li>Age: {{ pet.age }}</li>
+    <li>Price: {{ item.Price }}</li>
+    <li>Size: {{ item.Size }}</li>
 </ul>
 <form action="{{ url_for('modify') }}" method="post">
-    <input type="hidden" name="pet_id" value="{{ pet.id }}">
+    <input type="hidden" name="product_id" value="{{ item.ID }}">
     <input class="btn btn-secondary" type="submit" name="modify" value="edit"></input>
     <input class="btn btn-danger" type="submit" name="modify" value="delete"></input>
 </form>
