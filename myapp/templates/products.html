@@ -14,16 +14,16 @@
       font-size: 30px;
       text-align: center;
     }
-    .pet_image{
+    .product_image{
         height:100px;
         width:auto;
     }
 </style>
-<h1>List of products</h1>
+<h1>List of Items</h1>
 
 <div class="grid-container">
-    {% for pet in pets %}
-    <div class="grid-item"><a href="/animals/{{ pet.id }}"><img src="{{pet.url}}" class="pet_image">{{ pet.name }}</a></div>
+    {% for item in items %}
+    <div class="grid-item"><a href="/products/{{ item.ID }}"><img src="{{item.Image}}" class="item_image">{{ item.Name }}</a></div>
     {% endfor %} 
   </div>
 {% endblock %}
