@@ -11,7 +11,8 @@ app.config['UPLOAD_FOLDER'] = picFolder
 @app.route('/home')
 def index():
     pic1 = os.path.join(app.config['UPLOAD_FOLDER'], 'shirt-1.jpg')
-    return render_template('index.html', user_image_=pic1) 
+    shirts = ['shirt-1.jpg', 'shirt-2.jpg', 'shirt-3.jpg', 'shirt-4.jpg', 'shirt-5.jpg', 'shirt-6.jpg']
+    return render_template('index.html', user_image_=pic1, shirts=shirts) 
 
 @app.route('/about')
 def about():
