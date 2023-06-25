@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import os
-from data import * 
+from data import *
+from functools import wraps
 
 app = Flask(__name__)
+
+app.secret_key = 'cosmo_apparel_secret_key'
 
 picFolder = os.path.join('static','img')
 app.config['UPLOAD_FOLDER'] = picFolder
@@ -13,6 +16,32 @@ def index():
     pic1 = os.path.join(app.config['UPLOAD_FOLDER'], 'shirt-1.jpg')
     shirts = ['shirt-1.jpg', 'shirt-2.jpg', 'shirt-3.jpg', 'shirt-4.jpg', 'shirt-5.jpg', 'shirt-6.jpg']
     return render_template('index.html', user_image_=pic1, shirts=shirts) 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user_answer = request.form.get('security_answer')
+
+        if user_answer == 'itsme':
+            session['logged_in'] = True
+            return redirect(url_for('register'))
+        else:
+            error_message = 'Incorrect answer'
+            return render_template('login.html', error_message=error_message)
+    else:
+        return render_template('login.html')
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/shop')
+def shop():
+    return render_template('shop.html')
 
 @app.route('/about')
 def about():
@@ -29,10 +58,12 @@ def animals(product_type):
     return render_template("products.html", product_type=product_type, items=item_list)
 
 @app.route('/register')
+@login_required
 def register():
     return render_template('register.html')
 
 @app.route('/processed', methods=['POST'])
+@login_required
 def processing():
     product_data = {
         "name": request.form['p_name'],
@@ -45,6 +76,7 @@ def processing():
     return redirect(url_for('products'))
 
 @app.route('/modify', methods=['POST'])
+@login_required
 def modify():
     if request.form["modify"] == "edit":
         product_id = request.form["product_id"] 
@@ -57,6 +89,7 @@ def modify():
         return redirect(url_for('products'))
 
 @app.route('/update', methods=['POST'])
+@login_required
 def update():
     product_data = {
         "product_id": request.form['product_id'],

@@ -47,6 +47,14 @@ img{
 }
 
 
+/* Security page */
+
+.login {
+  background-color: #7b59ac;
+  padding: 10px;
+  margin-bottom: 10px;  
+}
+
 /* About page */
 h1 {
     color: black; 
@@ -64,7 +72,7 @@ h1 {
 
 body {
     padding: 0px 200px 0px 200px;
-    background-color: #886DAF
+    background-color: #886DAF;
   }
 
 .about-page {

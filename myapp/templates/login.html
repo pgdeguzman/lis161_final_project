@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="login">
+<form method="POST" action="/login">
+  <label id="auth"><h3>To access this page, please enter the passkey:</h3></label><br><br>
+  <input type="text" name="security_answer" placeholder="Your answer" required><br>
+  <input id="authbutton"type="submit" value="Submit">
+</form>
+<br>
+{% if error_message %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>  
+      {{ error_message }}
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}

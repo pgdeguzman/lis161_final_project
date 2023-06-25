@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Register an Item for listing</h1>
+<h2>Register an Item for listing</h2>
 <form action="{{ url_for('processing') }}" method="post">
     <label for="p_size">Size of Apparel</label>
     <select name="p_size" id="p_Size" required>
