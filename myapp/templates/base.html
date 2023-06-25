@@ -29,7 +29,7 @@
                 <a class="nav-link active" aria-current="page" href="{{url_for('index')}}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{url_for('register')}}">Shop</a>
+                <a class="nav-link" href="{{url_for('products')}}">Shop</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('register')}}">Sell</a>
@@ -39,6 +39,11 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('about')}}">About Us</a>
+              </li>
+              <li class="nav-item">
+                {% if session.logged_in %}
+                <a class="nav-link logout" href="{{ url_for('logout') }}">Logout</a>
+                {% endif %}
               </li>
             </ul>
           </div>

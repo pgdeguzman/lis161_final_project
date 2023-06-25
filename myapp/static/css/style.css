@@ -55,6 +55,7 @@ img{
   margin-bottom: 10px;  
 }
 
+
 /* About page */
 h1 {
     color: black; 
@@ -147,4 +148,42 @@ div.desc {
   content: "";
   display: table;
   clear: both;
+}
+
+/* Products */
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  text-align: center;
+}
+
+.grid-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+
+.grid-item img {
+  height: 150px;
+  width: auto;
+  object-fit: contain;
+}
+
+.grid-item p {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+#product_image {
+    height:100px;
+    width:auto;
 }

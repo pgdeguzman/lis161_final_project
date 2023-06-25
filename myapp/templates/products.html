@@ -1,29 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<style>
-    .grid-container {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      background-color: #2196F3;
-      padding: 10px;
-    }
-    .grid-item {
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      font-size: 30px;
-      text-align: center;
-    }
-    .product_image{
-        height:100px;
-        width:auto;
-    }
-</style>
-<h1>List of Items</h1>
-
 <div class="grid-container">
-    {% for item in items %}
-    <div class="grid-item"><a href="/products/{{ item.ID }}"><img src="{{item.Image}}" class="item_image">{{ item.Name }}</a></div>
-    {% endfor %} 
-  </div>
+  {% set displayed_images = [] %}
+  {% for item in items %}
+    {% if item['image_url'] not in displayed_images %}
+      {% set _ = displayed_images.append(item['image_url']) %}
+      <div class="grid-item">
+          <a href="/products/{{ item.id }}">
+              <img src="{{ item['image_url'] }}" alt="Item Image">
+              <p>{{ item['name'] }}</p>
+          </a>
+      </div>
+    {% endif %}
+  {% endfor %} 
+</div>
 {% endblock %}

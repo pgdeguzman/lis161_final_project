@@ -14,8 +14,21 @@ app.config['UPLOAD_FOLDER'] = picFolder
 @app.route('/home')
 def index():
     pic1 = os.path.join(app.config['UPLOAD_FOLDER'], 'shirt-1.jpg')
-    shirts = ['shirt-1.jpg', 'shirt-2.jpg', 'shirt-3.jpg', 'shirt-4.jpg', 'shirt-5.jpg', 'shirt-6.jpg']
-    return render_template('index.html', user_image_=pic1, shirts=shirts) 
+    shirts = []
+    unique_images = set()
+    for item in get_all_items():
+        image_url = item['image_url']
+        if image_url not in unique_images:
+            shirts.append(image_url)
+            unique_images.add(image_url)
+            if len(shirts) == 3:
+                break
+    return render_template('index.html', user_image_=pic1, shirts=shirts)
+
+def jinja2_enumerate(iterable, start=0):
+    return enumerate(iterable, start=start)
+
+app.jinja_env.filters['enumerate'] = jinja2_enumerate
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -39,23 +52,33 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.route('/shop')
-def shop():
-    return render_template('shop.html')
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/products/<int:product_id>')
-def pet(product_id):
-    item = get_item_by_id(product_id)
-    return render_template("item.html", item=item)
+@app.route('/products')
+def products():
+    item_list = get_all_items()
+    return render_template("products.html", items=item_list)
 
-@app.route('/products/<product_type>')
-def animals(product_type):
-    item_list = get_all_items(product_type)
-    return render_template("products.html", product_type=product_type, items=item_list)
+
+@app.route('/products/<int:product_id>')
+def item(product_id):
+    item = get_item_by_id(product_id)
+    image_filename = item['image']
+    image_path = url_for('static', filename='img/' + image_filename)
+    return render_template("item.html", item=item, image_path=image_path)
+
+#@app.route('/products/<product_type>')
+#def items(product_type):
+#    item_list = get_all_items_by_type(product_type)
+#    return render_template("products.html", product_type=product_type, items=item_list)
 
 @app.route('/register')
 @login_required

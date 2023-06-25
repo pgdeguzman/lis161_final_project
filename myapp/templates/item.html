@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ item.Name }}</h1>
-<img src="{{item.Image}}" id="product_image">
+<h2>{{ item['name'] }}</h2>
+<img src="{{ item['image_url'] }}" id="product_image">
 <ul>
-    <li>Price: {{ item.Price }}</li>
-    <li>Size: {{ item.Size }}</li>
+    <li>Price: {{ item['price'] }}</li>
+    <li>Size: {{ item['size'] }}</li>
 </ul>
+
+{% if session.logged_in %}
 <form action="{{ url_for('modify') }}" method="post">
-    <input type="hidden" name="product_id" value="{{ item.ID }}">
+    <input type="hidden" name="product_id" value="{{ item['id'] }}">
     <input class="btn btn-secondary" type="submit" name="modify" value="edit"></input>
     <input class="btn btn-danger" type="submit" name="modify" value="delete"></input>
 </form>
+{% endif %}
+
 {% endblock %}
