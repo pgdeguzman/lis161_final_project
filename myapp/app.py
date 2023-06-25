@@ -150,8 +150,9 @@ def buy():
         item = get_item_by_name(item_name)
         return render_template('buy.html', item=item)
 
-@app.route('/purchase', methods=['POST'])
-def purchase():
+
+@app.route('/process_purchase', methods=['POST'])
+def process_purchase():
     name = request.form['name']
     quantity = int(request.form['quantity'])
     buyer_name = request.form['buyer_name']
@@ -172,4 +173,3 @@ def purchase():
 @app.route('/purchase-success')
 def purchase_success():
     return render_template('purchase_success.html')
-
