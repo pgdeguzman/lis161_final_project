@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 app.secret_key = 'cosmo_apparel_secret_key'
 
-picFolder = os.path.join('static','img')
+picFolder = os.path.join('static', 'img')
 app.config['UPLOAD_FOLDER'] = picFolder
 
 @app.route('/')
@@ -57,7 +57,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -67,18 +66,12 @@ def products():
     item_list = get_all_items()
     return render_template("products.html", items=item_list)
 
-
-@app.route('/products/<int:product_id>')
-def item(product_id):
-    item = get_item_by_id(product_id)
+@app.route('/products/<string:name>')
+def item(name):
+    item = get_item_by_name(name)
     image_filename = item['image']
     image_path = url_for('static', filename='img/' + image_filename)
     return render_template("item.html", item=item, image_path=image_path)
-
-#@app.route('/products/<product_type>')
-#def items(product_type):
-#    item_list = get_all_items_by_type(product_type)
-#    return render_template("products.html", product_type=product_type, items=item_list)
 
 @app.route('/register')
 @login_required
@@ -91,9 +84,15 @@ def processing():
     product_data = {
         "name": request.form['p_name'],
         "price": request.form['p_price'],
-        "size": request.form['p_size'],
+        "sizes": {
+            request.form['p_size']: request.form['p_price']
+        },
         "image": request.form['p_url'],
-        "desc": request.form['p_desc'],
+        "description": request.form['p_desc'],
+        "stock": {
+            request.form['p_size']: 10  # Assuming initial stock is 10 for all sizes
+        },
+        "timestamp": "Some timestamp"  # Replace with the actual timestamp
     }
     insert_item(product_data)
     return redirect(url_for('products'))
@@ -118,19 +117,59 @@ def update():
         "product_id": request.form['product_id'],
         "name": request.form['p_name'],
         "price": request.form['p_price'],
-        "size": request.form['p_size'],
+        "sizes": {
+            request.form['p_size']: request.form['p_price']
+        },
         "image": request.form['p_url'],
-        "desc": request.form['p_desc'],
+        "description": request.form['p_desc'],
     }
     update_item(product_data)
     return redirect(url_for('item', product_id=request.form['product_id']))
 
-@app.route('/search')
-def search():
-    query = request.args.get('query')
-    criteria = request.args.get('criteria')
-    search_results = perform_search(query, criteria)
-    return render_template('search.html', query=query, criteria=criteria, results=search_results)
+@app.route('/buy', methods=['GET', 'POST'])
+def buy():
+    if request.method == 'POST':
+        name = request.form['name']
+        contact = request.form['contact']
+        address = request.form['address']
+        quantity = int(request.form['quantity'])
+        item_name = request.args.get('name')
+        item = get_item_by_name(item_name)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        if quantity <= item['stock']:
+            # Process the purchase
+            updated_stock = item['stock'] - quantity
+            update_item_stock(item['id'], updated_stock)
+
+            return redirect(url_for('products'))
+        else:
+            session['error_message'] = 'Desired quantity is higher than the currently available stock. Please re-enter.'
+            return redirect(url_for('buy', name=item_name))
+    else:
+        item_name = request.args.get('name')
+        item = get_item_by_name(item_name)
+        return render_template('buy.html', item=item)
+
+@app.route('/purchase', methods=['POST'])
+def purchase():
+    name = request.form['name']
+    quantity = int(request.form['quantity'])
+    buyer_name = request.form['buyer_name']
+    contact_details = request.form['contact_details']
+    address = request.form['address']
+    
+    item = get_item_by_name(name)
+    if item['stock'] < quantity:
+        error_message = "Desired quantity is higher than the currently available stock. Please re-enter."
+        return render_template('buy.html', error_message=error_message, product=item)    
+    # Process the purchase    
+    updated_stock = item['stock'] - quantity
+    update_stock(name, updated_stock)
+    
+    return redirect(url_for('purchase_success', item_name=name, quantity=quantity, buyer_name=buyer_name, contact_details=contact_details, address=address))
+
+
+@app.route('/purchase-success')
+def purchase_success():
+    return render_template('purchase_success.html')
+

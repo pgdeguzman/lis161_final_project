@@ -184,6 +184,12 @@ div.desc {
 }
 
 #product_image {
-    height:100px;
+    height:300px;
     width:auto;
+}
+
+/* Item */
+
+#quantity {
+  width: 35px;
 }

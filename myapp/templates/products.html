@@ -6,7 +6,7 @@
     {% if item['image_url'] not in displayed_images %}
       {% set _ = displayed_images.append(item['image_url']) %}
       <div class="grid-item">
-          <a href="/products/{{ item.id }}">
+          <a href="{{ url_for('item', name=item['name']) }}">
               <img src="{{ item['image_url'] }}" alt="Item Image">
               <p>{{ item['name'] }}</p>
           </a>

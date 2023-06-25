@@ -1,18 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ item['name'] }}</h2>
-<img src="{{ item['image_url'] }}" id="product_image">
-<ul>
-    <li>Price: {{ item['price'] }}</li>
-    <li>Size: {{ item['size'] }}</li>
-</ul>
-
-{% if session.logged_in %}
-<form action="{{ url_for('modify') }}" method="post">
-    <input type="hidden" name="product_id" value="{{ item['id'] }}">
-    <input class="btn btn-secondary" type="submit" name="modify" value="edit"></input>
-    <input class="btn btn-danger" type="submit" name="modify" value="delete"></input>
-</form>
-{% endif %}
-
+<div class="product-details">
+  <div class="product-image">
+    <img src="{{ item['image_url'] }}" id="product_image">
+  </div>
+  <div class="product-info">
+    <h2>{{ item['name'] }}</h2>
+    <ul>
+      <li>Price: {{ item['price'] }}</li>
+      <li>Size: {{ item['size'] }}</li>
+      <li>{{ item['description'] }}</li>
+      <li>
+        Stock: <span class="stock {% if item['stock']['total'] == 0 %}out-of-stock{% endif %}">
+          {% if item['stock']['total'] == 0 %}Out of Stock{% else %}{{ item['stock']['total'] }}{% endif %}
+        </span>
+      </li>
+      {% if session.logged_in %}
+        <li>Date Last Modified: {{ item['timestamp'] }}</li>
+      {% endif %}
+    </ul>
+    
+    <form method="POST" action="{{ url_for('buy', name=item['name']) }}">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="{{ item['stock'] }}" value="1">
+        <button type="submit">Buy</button>
+        {% if 'error_message' in session %}
+            <p>{{ session['error_message'] }}</p>
+            {% set _ = session.pop('error_message', None) %}
+        {% endif %}
+    </form>
+    
+  </div>
+</div>
 {% endblock %}
