@@ -68,10 +68,14 @@ def products():
 
 @app.route('/products/<string:name>')
 def item(name):
+    size = request.args.get('size', default=None)
     item = get_item_by_name(name)
-    image_filename = item['image']
+    description = get_description_by_name_and_size(name, size)
+    stock = get_stock_by_name_and_size(name, size)
+    price = get_price_by_name_and_size(name, size)
+    image_filename = item['image_url']
     image_path = url_for('static', filename='img/' + image_filename)
-    return render_template("item.html", item=item, image_path=image_path)
+    return render_template("item.html", name=name, size=size, item=item, description=description, stock=stock, price=price, image_path=image_path)
 
 @app.route('/register')
 @login_required
@@ -132,7 +136,7 @@ def buy():
         name = request.form.get('name')
         contact = request.form.get('contact')
         address = request.form.get('address')
-        quantity = int(request.form.get('quantity'))
+        quantity = request.form.get('quantity')
         item_name = request.args.get('name')
         item = get_item_by_name(item_name)
 
@@ -140,18 +144,28 @@ def buy():
             session['error_message'] = 'Please fill in all the required fields.'
             return redirect(url_for('buy', name=item_name))
 
-        if quantity <= item['stock']:
+        if not item:
+            session['error_message'] = 'Item not found.'
+            return redirect(url_for('buy', name=item_name))
+
+        if quantity and quantity.isdigit() and int(quantity) > 0 and int(quantity) <= item['stock']:
+            quantity = int(quantity)
             # Process the purchase
             updated_stock = item['stock'] - quantity
             update_item_stock(item['id'], updated_stock)
 
             return redirect(url_for('purchase_success', item_name=name, quantity=quantity, buyer_name=name, contact_details=contact, address=address))
         else:
-            session['error_message'] = 'Desired quantity is higher than the currently available stock. Please re-enter.'
+            session['error_message'] = 'Invalid quantity or desired quantity is higher than the currently available stock. Please re-enter.'
             return redirect(url_for('buy', name=item_name))
     else:
         item_name = request.args.get('name')
         item = get_item_by_name(item_name)
+
+        if not item:
+            session['error_message'] = 'Item not found.'
+            return redirect(url_for('index'))
+
         return render_template('buy.html', product=item)
 
 @app.route('/purchase_success')

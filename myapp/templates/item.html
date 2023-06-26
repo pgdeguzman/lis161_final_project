@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="product-details">
   <div class="product-image">
-    <img src="{{ item['image_url'] }}" id="product_image">
+    <img src="{{ item['image_url'] }}" id="product_image" alt="{{ name }} Image">
   </div>
   <div class="product-info">
-    <h2>{{ item['name'] }}</h2>
-    <ul>
-      <li>Price: {{ item['price'] }}</li>
-      <li>Size: {{ item['size'] }}</li>
-      <li>{{ item['description'] }}</li>
-      <li>
-        Stock: <span class="stock {% if item['stock']['total'] == 0 %}out-of-stock{% endif %}">
-          {% if item['stock']['total'] == 0 %}Out of Stock{% else %}{{ item['stock']['total'] }}{% endif %}
-        </span>
-      </li>
-      {% if session.logged_in %}
-        <li>Date Last Modified: {{ item['timestamp'] }}</li>
-      {% endif %}
-    </ul>
-    
-    <form method="POST" action="{{ url_for('buy', name=item['name']) }}">
+    <h2>{{ name }}</h2> 
+    <p>Description: {{ description }}</p>
+    <table>
+      <tr>
+        <td>Stock:</td>
+        <td>{{ stock }}</td>
+      </tr>
+    </table>
+    {% if session.logged_in %}
+    <p>Date Last Modified: {{ item['timestamp'] }}</p>
+    {% endif %}
+    <form action="/buy" method="POST">
+      <input type="hidden" name="name" value="{{ name }}">
+      <input type="hidden" name="price" value="{{ price }}">
+      <div>
+        <label for="size">Size:</label>
+        <select name="size" id="size">
+          <option value="Small">Small</option>
+          <option value="Medium">Medium</option>
+          <option value="Large">Large</option>
+        </select>
+      </div>
+      <div>
         <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="{{ item['stock'] }}" value="1">
+        <input type="number" name="quantity" id="quantity" min="1" max="{{ stock }}" value="1">
+      </div>
+      <p>Price: {{ price }}</p>
+      <div>
         <button type="submit">Buy</button>
-        {% if 'error_message' in session %}
-            <p>{{ session['error_message'] }}</p>
-            {% set _ = session.pop('error_message', None) %}
-        {% endif %}
+      </div>
     </form>
-    
   </div>
 </div>
 {% endblock %}
