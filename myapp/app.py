@@ -124,52 +124,37 @@ def update():
         "description": request.form['p_desc'],
     }
     update_item(product_data)
-    return redirect(url_for('item', product_id=request.form['product_id']))
+    return redirect(url_for('item', name=request.form['p_name']))
 
 @app.route('/buy', methods=['GET', 'POST'])
 def buy():
     if request.method == 'POST':
-        name = request.form['name']
-        contact = request.form['contact']
-        address = request.form['address']
-        quantity = int(request.form['quantity'])
+        name = request.form.get('name')
+        contact = request.form.get('contact')
+        address = request.form.get('address')
+        quantity = int(request.form.get('quantity'))
         item_name = request.args.get('name')
         item = get_item_by_name(item_name)
+
+        if not name or not contact or not address or not quantity:
+            session['error_message'] = 'Please fill in all the required fields.'
+            return redirect(url_for('buy', name=item_name))
 
         if quantity <= item['stock']:
             # Process the purchase
             updated_stock = item['stock'] - quantity
             update_item_stock(item['id'], updated_stock)
 
-            return redirect(url_for('products'))
+            return redirect(url_for('purchase_success', item_name=name, quantity=quantity, buyer_name=name, contact_details=contact, address=address))
         else:
             session['error_message'] = 'Desired quantity is higher than the currently available stock. Please re-enter.'
             return redirect(url_for('buy', name=item_name))
     else:
         item_name = request.args.get('name')
         item = get_item_by_name(item_name)
-        return render_template('buy.html', item=item)
+        return render_template('buy.html', product=item)
 
-@app.route('/purchase', methods=['POST'])
-def purchase():
-    name = request.form['name']
-    quantity = int(request.form['quantity'])
-    buyer_name = request.form['buyer_name']
-    contact_details = request.form['contact_details']
-    address = request.form['address']
-    
-    item = get_item_by_name(name)
-    if item['stock'] < quantity:
-        error_message = "Desired quantity is higher than the currently available stock. Please re-enter."
-        return render_template('buy.html', error_message=error_message, product=item)    
-    # Process the purchase    
-    updated_stock = item['stock'] - quantity
-    update_stock(name, updated_stock)
-    
-    return redirect(url_for('purchase_success', item_name=name, quantity=quantity, buyer_name=buyer_name, contact_details=contact_details, address=address))
-
-
-@app.route('/purchase-success')
+@app.route('/purchase_success')
 def purchase_success():
     return render_template('purchase_success.html')
 
