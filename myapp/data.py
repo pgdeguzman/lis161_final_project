@@ -22,6 +22,15 @@ def get_all_items():
     conn.close()
     return results
 
+def get_item_by_id(product_id):
+    conn, cur = connect_to_db(db_path)
+    query = 'SELECT * FROM items WHERE id = ?'
+    value = product_id
+    result = cur.execute(query, (value,)).fetchone()
+    conn.close()
+    return result
+
+
 def insert_item(product_data):
     conn, cur = connect_to_db(db_path)
     query = 'INSERT INTO items (name, price, size, image, description, stock, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)'
