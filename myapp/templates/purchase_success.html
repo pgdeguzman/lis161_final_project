@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
+
 {% block content %}
   <h2>Purchase Success</h2>
-  <h3>Product Details:</h3>
-  <p>Product Name: {{ product_name }}</p>
+  <h3>Thank you for your purchase!</h3>
+  <p>Product: {{ product_name }}</p>
   <p>Size: {{ size }}</p>
   <p>Quantity: {{ quantity }}</p>
-  <p>Price: {{ price }}</p>
+  <p>Price: ${{ price }}</p>
   <p>Your Name: {{ your_name }}</p>
   <p>Contact Details: {{ contact_details }}</p>
   <p>Address: {{ address }}</p>
-  <p>Date: {{ purchase_date }}</p>
-  <p>Thank you for your purchase! Please wait for the confirmation of your order in the contact detail/s that you provided. We hope to see you again soon!</p>
+  <p>Payment Method: {{ payment_method }}</p>
+  <p>Your purchase has been processed successfully.</p>
+  <p>A confirmation email has been sent to your registered email address.</p>
   <a href="/home">Back to Home</a>
   <a href="/products">Back to Products</a>
 {% endblock %}

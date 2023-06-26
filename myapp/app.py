@@ -94,9 +94,9 @@ def processing():
         "image": request.form['p_url'],
         "description": request.form['p_desc'],
         "stock": {
-            request.form['p_size']: 10  # Assuming initial stock is 10 for all sizes
+            request.form['p_size']: 10
         },
-        "timestamp": "Some timestamp"  # Replace with the actual timestamp
+        "timestamp": "Some timestamp"
     }
     insert_item(product_data)
     return redirect(url_for('products'))
