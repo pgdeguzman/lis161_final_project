@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
 from data import *
 from functools import wraps
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -57,6 +58,10 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -77,9 +82,27 @@ def item(name):
     image_path = url_for('static', filename='img/' + image_filename)
     return render_template("item.html", name=name, size=size, item=item, description=description, stock=stock, price=price, image_path=image_path)
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 @login_required
 def register():
+    if request.method == 'POST':
+        size = request.form['size']
+        name = request.form['name']
+        price = request.form['price']
+        description = request.form['description']
+        image_file = request.files['image']
+        stock = request.form['stock']
+        
+        image_filename = secure_filename(image_file.filename)
+        image_path = os.path.join(app.root_path, 'static/img', image_filename)
+        image_file.save(image_path)
+        
+        insert_item_into_db(name, size, price, description, image_filename, stock)
+        
+        flash('Item added successfully!')
+        
+        return redirect('/register')
+
     return render_template('register.html')
 
 @app.route('/processed', methods=['POST'])
@@ -88,7 +111,7 @@ def processing():
     product_data = {
         "name": request.form['p_name'],
         "price": request.form['p_price'],
-        "sizes": {
+        "size": {
             request.form['p_size']: request.form['p_price']
         },
         "image": request.form['p_url'],

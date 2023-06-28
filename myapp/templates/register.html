@@ -2,33 +2,23 @@
 
 {% block content %}
   <h2>Register Item</h2>
-  <form action="/register" method="POST" enctype="multipart/form-data">
-    <div>
-      <label for="size">Size:</label>
-      <select name="size" id="size" required>
-        <option value="Small">Small</option>
-        <option value="Medium">Medium</option>
-        <option value="Large">Large</option>
-      </select>
-    </div>
-    <div>
-      <label for="name">Name:</label>
-      <input type="text" name="name" id="name" required>
-    </div>
-    <div>
-      <label for="price">Price:</label>
-      <input type="number" name="price" id="price" required>
-    </div>
-    <div>
-      <label for="image">Image:</label>
-      <input type="file" name="image" id="image" required>
-    </div>
-    <div>
-      <label for="description">Description:</label>
-      <textarea name="description" id="description" required></textarea>
-    </div>
-    <div>
-      <button type="submit">Register</button>
-    </div>
+  <form action="{{ url_for('register') }}" method="POST" enctype="multipart/form-data">
+    <label for="size">Size:</label>
+    <select name="size" id="size" required>
+      <option value="Small">Small</option>
+      <option value="Medium">Medium</option>
+      <option value="Large">Large</option>
+    </select><br><br>
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" required><br><br>
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price" required><br><br>
+    <label for="image">Image:</label>
+    <input type="file" name="image" id="image" accept=".jpg, .jpeg" required><br><br>
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required></textarea><br><br>
+    <label for="stock">Stock:</label>
+    <input type="number" name="stock" id="stock" required><br><br>
+    <input type="submit" value="Register">
   </form>
 {% endblock %}

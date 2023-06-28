@@ -22,6 +22,7 @@ def get_all_items():
     conn.close()
     return results
 
+
 def get_item_by_id(product_id):
     conn, cur = connect_to_db(db_path)
     query = 'SELECT * FROM items WHERE id = ?'
@@ -131,6 +132,14 @@ def create_purchase(product_name, size, quantity, price, your_name, contact_deta
         address,
         proof_of_payment
     )
+    cur.execute(query, values)
+    conn.commit()
+    conn.close()
+
+def insert_item_into_db(name, size, price, description, image_filename, stock):
+    conn, cur = connect_to_db(db_path)
+    query = 'INSERT INTO items (name, size, price, description, image_filename, stock) VALUES (?, ?, ?, ?, ?, ?)'
+    values = (name, size, price, description, image_filename, stock)
     cur.execute(query, values)
     conn.commit()
     conn.close()
