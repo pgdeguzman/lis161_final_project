@@ -16,7 +16,7 @@
       {% if item['image_url'] not in displayed_items %}
         {% set _ = displayed_items.append(item['image_url']) %}
         <div class="grid-item">
-          <a href="{{ url_for('item', name=item['name']) }}">
+          <a href="{{ url_for('item_by_name', name=item['name']) }}">
             <img src="{{ item['image_url'] }}" alt="Item Image">
             <p>{{ item['name'] }}</p>
           </a>
@@ -30,7 +30,7 @@
       {% if item['name'] not in displayed_items %}
         {% set _ = displayed_items.append(item['name']) %}
         <li class="list-item">
-          <a href="{{ url_for('item', name=item['name']) }}">{{ item['name'] }}</a>
+          <a href="{{ url_for('item_by_name', name=item['name']) }}">{{ item['name'] }}</a>
         </li>
       {% endif %}
     {% endfor %}

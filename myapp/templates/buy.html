@@ -2,20 +2,11 @@
 {% block content %}
 <h2>Buy</h2>
   <form action="/purchase_success" method="POST">
-      <input type="hidden" name="product_id" value="{{ product[0] }}">
-      <input type="hidden" name="product_name" value="{{ product[1] }}">
-      <input type="hidden" name="size" value="{{ product[2] }}">
-      <input type="hidden" name="quantity" value="{{ quantity }}">
-      <input type="hidden" name="price" value="{{ total_price }}">
-
       <label for="product_name">Product Name:</label>
       <input type="text" id="product_name" name="product_name" value="{{ product[1] }}" readonly><br><br>
 
       <label for="size">Size:</label>
       <input type="text" id="size" name="size" value="{{ product[2] }}" readonly><br><br>
-
-      <label for="quantity">Quantity:</label>
-      <input type="text" id="quantity" name="quantity" value="{{ quantity }}" readonly><br><br>
 
       <label for="price">Price:</label>
       <input type="text" id="price" name="price" value="{{ total_price }}" readonly><br><br>

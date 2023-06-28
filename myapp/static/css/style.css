@@ -257,7 +257,22 @@ div.desc {
 }
 
 
+
 /* Item */
+
+#product {
+  background-color: #9b42b1;
+  padding: 50px;
+}
+
+#product_size {
+  column-width: 150px;
+}
+
+#product_image {
+  height: 300px;
+  width: auto;
+}
 
 #quantity {
   width: 35px;

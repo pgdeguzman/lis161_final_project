@@ -24,35 +24,11 @@ def get_all_items():
 
 def get_item_by_id(product_id):
     conn, cur = connect_to_db(db_path)
-    query = 'SELECT * FROM items WHERE id = ?'
+    query = 'SELECT *, "/static/img/" || image_filename AS image_url FROM items WHERE id = ?'
     value = product_id
     result = cur.execute(query, (value,)).fetchone()
     conn.close()
     return result
-
-def get_description_by_name_and_size(name, size):
-    conn, cur = connect_to_db(db_path)
-    query = 'SELECT description FROM items WHERE name = ? AND size = ?'
-    values = (name, size)
-    result = cur.execute(query, values).fetchone()
-    conn.close()
-    return result[0] if result else ""
-
-def get_stock_by_name_and_size(name, size):
-    conn, cur = connect_to_db(db_path)
-    query = 'SELECT stock FROM items WHERE name = ? AND size = ?'
-    values = (name, size)
-    result = cur.execute(query, values).fetchone()
-    conn.close()
-    return result[0] if result else 0
-
-def get_price_by_name_and_size(name, size):
-    conn, cur = connect_to_db(db_path)
-    query = 'SELECT price FROM items WHERE name = ? AND size = ?'
-    values = (name, size)
-    result = cur.execute(query, values).fetchone()
-    conn.close()
-    return result[0] if result else 0
 
 def insert_item(product_data):
     conn, cur = connect_to_db(db_path)
@@ -140,3 +116,11 @@ def insert_item_into_db(name, size, price, description, image_filename, stock):
     cur.execute(query, values)
     conn.commit()
     conn.close()
+
+def get_sizes_by_name(name):
+    conn, cur = connect_to_db(db_path)
+    query = 'SELECT id, size FROM items WHERE name = ?'
+    value = name
+    results = cur.execute(query, (value,)).fetchall()
+    conn.close()
+    return [{'id': result['id'], 'size': result['size']} for result in results]

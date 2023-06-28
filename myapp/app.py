@@ -73,15 +73,17 @@ def products():
     return render_template("products.html", items=item_list, view=view)
 
 @app.route('/products/<string:name>')
-def item(name):
-    size = request.args.get('size', default=None)
-    item = get_item_by_name(name)
-    description = get_description_by_name_and_size(name, size)
-    stock = get_stock_by_name_and_size(name, size)
-    price = get_price_by_name_and_size(name, size)
+def item_by_name(name):
+    item = get_sizes_by_name(name)
+    product = get_item_by_name(name)
+    return render_template("item.html", item=item, display_type='name', name=name, product=product)
+
+@app.route('/products/<int:product_id>')
+def item_by_id(product_id):
+    item = get_item_by_id(product_id)
     image_filename = item['image_url']
     image_path = url_for('static', filename='img/' + image_filename)
-    return render_template("item.html", name=name, size=size, item=item, product=item, description=description, stock=stock, price=price, image_path=image_path)
+    return render_template("item.html", item=item, display_type='id', product_id=product_id, product=item, image_path=image_path)
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required

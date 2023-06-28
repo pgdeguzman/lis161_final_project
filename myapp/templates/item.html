@@ -1,40 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="product-details">
-  <div class="product-image">
-    <img src="{{ item['image_url'] }}" id="product_image" alt="{{ name }} Image">
-  </div>
-  <div class="product-info">
-    <h2>{{ name }}</h2> 
-    <p>Description: {{ description }}</p>
-    <table>
-      <tr>
-        <td>Stock:</td>
-        <td>{{ stock }}</td>
-      </tr>
-    </table>
+<div id="product">
+  {% if display_type == 'name' %}
+    <h3>{{ product.name }}</h3><hr><br>
+    <h4>Choose your desired size:</h4><br>
+    <ul class="list-container">
+      {% for size in item %}
+          <li class="list-item" id="product_size">
+              <a href="{{ url_for('item_by_id', product_id=size['id']) }}">{{ size['size'] }}</a>
+          </li>
+      {% endfor %}
+    </ul>
+  {% elif display_type == 'id' %}
+    <h3>{{ product.name }}</h3><hr><br>
+    <img src="{{ item['image_url'] }}" id="product_image"><br><br>
+    <p>{{ product.description }}</p>
+    <p>Size: {{ product.size }}</p>
+    <p>Price: {{ product.price }}</p>
+    <p>Stock: {{ product.stock }}</p>
     {% if session.logged_in %}
-    <p>Date Last Modified: {{ item['timestamp'] }}</p>
-    {% endif %}
-    <form action="/buy" method="POST">
-      <input type="hidden" name="name" value="{{ name }}">
-      <input type="hidden" name="price" value="{{ price }}">
-      <div>
-        <label for="size">Size:</label>
-        <select name="size" id="size">
-          <option value="Small">Small</option>
-          <option value="Medium">Medium</option>
-          <option value="Large">Large</option>
-        </select>
-      </div>
-      <div>
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" min="1" max="{{ stock }}" value="1">
-      </div>
-      <p>Price: {{ price }}</p>
-    </form>
-    {% if session.logged_in %}
+    <p>Last Modified: {{ product.timestamp }}</p>
     <form action="{{ url_for('modify') }}" method="post">
       <input type="hidden" name="product_id" value="{{ product.id }}">
       <input class="btn btn-secondary" type="submit" name="action" value="edit"></input>
@@ -46,6 +32,6 @@
       <input class="btn btn-secondary" type="submit" name="action" value="Buy"></input>
     </form>
     {% endif %}
-  </div>
+  {% endif %}
 </div>
 {% endblock %}
