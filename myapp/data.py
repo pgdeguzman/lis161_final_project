@@ -22,7 +22,6 @@ def get_all_items():
     conn.close()
     return results
 
-
 def get_item_by_id(product_id):
     conn, cur = connect_to_db(db_path)
     query = 'SELECT * FROM items WHERE id = ?'
@@ -55,18 +54,16 @@ def get_price_by_name_and_size(name, size):
     conn.close()
     return result[0] if result else 0
 
-
 def insert_item(product_data):
     conn, cur = connect_to_db(db_path)
-    query = 'INSERT INTO items (name, price, size, image, description, stock, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    query = 'INSERT INTO items (name, price, size, image_filename, description, stock) VALUES (?, ?, ?, ?, ?, ?)'
     values = (
         product_data['name'],
         product_data['price'],
         product_data['size'],
-        product_data['image'],
+        product_data['image_filename'],
         product_data['description'],
-        product_data['stock'],
-        product_data['timestamp']
+        product_data['stock']
     )
     cur.execute(query, values)
     conn.commit()
@@ -74,12 +71,12 @@ def insert_item(product_data):
 
 def update_item(product_data):
     conn, cur = connect_to_db(db_path)
-    query = "UPDATE items SET name=?, price=?, size=?, image=?, description=? WHERE id=?"
+    query = "UPDATE items SET name=?, price=?, size=?, image_filename=?, description=? WHERE id=?"
     values = (
         product_data['name'],
         product_data['price'],
         product_data['size'],
-        product_data['image'],
+        product_data['image_filename'],
         product_data['description'],
         product_data['product_id'],
     )

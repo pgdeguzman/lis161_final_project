@@ -33,10 +33,19 @@
         <input type="number" name="quantity" id="quantity" min="1" max="{{ stock }}" value="1">
       </div>
       <p>Price: {{ price }}</p>
-      <div>
-        <button type="submit">Buy</button>
-      </div>
     </form>
+    {% if session.logged_in %}
+    <form action="{{ url_for('modify') }}" method="post">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input class="btn btn-secondary" type="submit" name="action" value="edit"></input>
+      <input class="btn btn-danger" type="submit" name="action" value="delete"></input>
+    </form>
+    {% else %}
+    <form action="{{ url_for('buy') }}" method="post">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input class="btn btn-secondary" type="submit" name="action" value="Buy"></input>
+    </form>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

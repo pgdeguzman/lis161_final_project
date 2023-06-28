@@ -1,34 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Update Item details</h1>
-<form action="{{ url_for('update') }}" method="post">
-    <input type="hidden" name="product_id" value="{{ item.ID }}">
-    <label for="p_size">Size of Apparel</label>
-    <select name="p_size" id="p_type" required>
-        <option disabled selected value>...</option>
-        {% if item.Size == "S" %}
-        <option value="S" selected>S</option>
-        <option value="M">M</option>
-        <option value="L">L</option>
-        {% elif item.Size == "M" %}
-        <option value="S">S</option>
-        <option value="M" selected>M</option>
-        <option value="L">L</option>
-        {% elif item.Size == "L" %}
-        <option value="S">S</option>
-        <option value="M">M</option>
-        <option value="L" selected>L</option>
-        {% endif %}
+<h2>Update Item</h2>
+<form action="{{ url_for('update') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="product_id" value="{{ item['id'] }}">
+    <label for="size">Size:</label>
+    <select name="size" id="size" required>
+        <option value="Small" {% if item.size == "Small" %}selected{% endif %}>Small</option>
+        <option value="Medium" {% if item.size == "Medium" %}selected{% endif %}>Medium</option>
+        <option value="Large" {% if item.size == "Large" %}selected{% endif %}>Large</option>
     </select><br><br>
-    <label for="p_name">Item Name:</label>
-    <input type="text" name="p_name" id="p_name" value="{{ item.Name }}" required><br><br>
-    <label for="p_price">Price:</label>
-    <input type="text" name="p_price" id="p_price" value="{{ item.Price }}" required><br><br>
-    <label for="p_url">Image URL:</label>
-    <input type="url" name="p_url" id="p_url" value="{{ item.Image }}" required><br>
-    <label for="p_url">Item Description:</label>
-    <textarea name="p_desc" cols="30" rows="10">{{ item.Desc }}</textarea><br>
-    <input type="submit" value="Update!">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" value="{{ item.name }}" required><br><br>
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price" value="{{ item.price }}" required><br><br>
+    <label for="image">Image:</label>
+    <input type="file" name="image_filename" accept="image/*" accept=".jpg, .jpeg"><br><br>
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required>{{ item.description }}</textarea><br><br>
+    <label for="stock">Stock:</label>
+    <input type="number" name="stock" id="stock" value="{{ item.stock }}" required><br><br>
+    <input type="submit" value="Update">
 </form>
 {% endblock %}

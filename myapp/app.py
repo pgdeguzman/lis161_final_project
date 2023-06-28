@@ -80,7 +80,7 @@ def item(name):
     price = get_price_by_name_and_size(name, size)
     image_filename = item['image_url']
     image_path = url_for('static', filename='img/' + image_filename)
-    return render_template("item.html", name=name, size=size, item=item, description=description, stock=stock, price=price, image_path=image_path)
+    return render_template("item.html", name=name, size=size, item=item, product=item, description=description, stock=stock, price=price, image_path=image_path)
 
 @app.route('/register', methods=['GET', 'POST'])
 @login_required
@@ -108,88 +108,57 @@ def register():
 @app.route('/processed', methods=['POST'])
 @login_required
 def processing():
-    product_data = {
-        "name": request.form['p_name'],
-        "price": request.form['p_price'],
-        "size": {
-            request.form['p_size']: request.form['p_price']
-        },
-        "image": request.form['p_url'],
-        "description": request.form['p_desc'],
-        "stock": {
-            request.form['p_size']: 10
-        },
-        "timestamp": "Some timestamp"
-    }
-    insert_item(product_data)
     return redirect(url_for('products'))
 
 @app.route('/modify', methods=['POST'])
 @login_required
 def modify():
-    if request.form["modify"] == "edit":
-        product_id = request.form["product_id"] 
+    action = request.form["action"]
+    product_id = request.form["product_id"]
+    if action == "edit":
         item = get_item_by_id(product_id)
         return render_template('update.html', item=item)
-    elif request.form["modify"] == "delete":
-        product_id = request.form["product_id"]
-        item = get_item_by_id(product_id)
+    elif action == "delete":
         delete_item({'product_id': product_id})
         return redirect(url_for('products'))
+
 
 @app.route('/update', methods=['POST'])
 @login_required
 def update():
+    product_id = request.form.get('product_id')
+    name = request.form.get('name')
+    price = request.form.get('price')
+    size = request.form.get('size')
+    description = request.form.get('description')
+    stock = request.form.get('stock')
+    image_file = request.files.get('image_filename')
+
+    if image_file:
+        image_filename = secure_filename(image_file.filename)
+        image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+    else:
+        image_filename = None
+
     product_data = {
-        "product_id": request.form['product_id'],
-        "name": request.form['p_name'],
-        "price": request.form['p_price'],
-        "sizes": {
-            request.form['p_size']: request.form['p_price']
-        },
-        "image": request.form['p_url'],
-        "description": request.form['p_desc'],
+        "product_id": product_id,
+        "name": name,
+        "price": price,
+        "size": size,
+        "description": description,
+        "stock": stock,
+        "image_filename": image_filename
     }
+    
+    if 'image' not in product_data:
+        product_data['image'] = None
+
     update_item(product_data)
-    return redirect(url_for('item', name=request.form['p_name']))
+    return redirect(url_for('item', name=name))
 
 @app.route('/buy', methods=['GET', 'POST'])
 def buy():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        contact = request.form.get('contact')
-        address = request.form.get('address')
-        quantity = request.form.get('quantity')
-        item_name = request.args.get('name')
-        item = get_item_by_name(item_name)
-
-        if not name or not contact or not address or not quantity:
-            session['error_message'] = 'Please fill in all the required fields.'
-            return redirect(url_for('buy', name=item_name))
-
-        if not item:
-            session['error_message'] = 'Item not found.'
-            return redirect(url_for('buy', name=item_name))
-
-        if quantity and quantity.isdigit() and int(quantity) > 0 and int(quantity) <= item['stock']:
-            quantity = int(quantity)
-            # Process the purchase
-            updated_stock = item['stock'] - quantity
-            update_item_stock(item['id'], updated_stock)
-
-            return redirect(url_for('purchase_success', item_name=name, quantity=quantity, buyer_name=name, contact_details=contact, address=address))
-        else:
-            session['error_message'] = 'Invalid quantity or desired quantity is higher than the currently available stock. Please re-enter.'
-            return redirect(url_for('buy', name=item_name))
-    else:
-        item_name = request.args.get('name')
-        item = get_item_by_name(item_name)
-
-        if not item:
-            session['error_message'] = 'Item not found.'
-            return redirect(url_for('index'))
-
-        return render_template('buy.html', product=item)
+    return render_template('buy.html')
 
 @app.route('/purchase_success')
 def purchase_success():
