@@ -68,8 +68,9 @@ def about():
 
 @app.route('/products')
 def products():
+    view = request.args.get('view', 'grid')
     item_list = get_all_items()
-    return render_template("products.html", items=item_list)
+    return render_template("products.html", items=item_list, view=view)
 
 @app.route('/products/<string:name>')
 def item(name):
@@ -149,7 +150,7 @@ def update():
         "stock": stock,
         "image_filename": image_filename
     }
-    
+
     if 'image' not in product_data:
         product_data['image'] = None
 
