@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Purchase Success</h2>
-  <h3>Thank you for your purchase!</h3>
-  <p>Product: {{ product_name }}</p>
-  <p>Size: {{ size }}</p>
-  <p>Price: P{{ price }}</p>
-  <p>Your Name: {{ your_name }}</p>
-  <p>Contact Details: {{ contact_details }}</p>
-  <p>Address: {{ address }}</p>
-  <p>Payment Method: {{ payment_method }}</p>
-  <p>Your purchase has been processed successfully.</p>
-  <p>A confirmation email has been sent to your registered email address.</p>
-  <a href="/home">Back to Home</a>
-  <a href="/products">Back to Products</a>
+<div id="order">
+  <hr><hr>
+  <h2>Your Purchase Summary</h2><hr><br>
+  <h3>Product Name: {{ purchases[-1]['product_name'] }}</h3>
+  <p>Size: {{ purchases[-1]['size'] }}</p>
+  <p>Price: {{ purchases[-1]['price'] }}</p>
+  <p>Your Name: {{ purchases[-1]['your_name'] }}</p>
+  <p>Contact Details: {{ purchases[-1]['contact_details'] }}</p>
+  <p>Address: {{ purchases[-1]['address'] }}</p>
+  <p>Proof of Payment:</p>
+  {% if purchases[-1]['proof_of_payment'] is not none %}
+    <img src="{{ url_for('static', filename='uploads/' + purchases[-1]['proof_of_payment']) }}" alt="Proof of Payment">
+  {% else %}
+    <p>No proof of payment available.</p>
+  {% endif %}
+  <hr><hr>
+
+  <p>Thank you for your purchase! To receive your item, kindly wait for our update in the contact details you've provided us or you can reach out to us via the contact channels indicated on our About page.</p><br>
+
+  <div>
+    <form action="/home" method="get">
+      <button type="submit">Return to Home</button>
+    </form><br>
+    <form action="/products" method="get">
+      <button type="submit">Browse Products</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,38 +1,22 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Buy</h2>
-  <form action="/purchase_success" method="POST">
-      <label for="product_name">Product Name:</label>
-      <input type="text" id="product_name" name="product_name" value="{{ product[1] }}" readonly><br><br>
+<div id="order">
+  <h2>Order Form</h2><hr><br>
+  <form action="{{ url_for('purchase_success') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="product_name" value="{{ product_name }}">
+    <input type="hidden" name="size" value="{{ size }}">
+    <input type="hidden" name="price" value="{{ price }}">
 
-      <label for="size">Size:</label>
-      <input type="text" id="size" name="size" value="{{ product[2] }}" readonly><br><br>
-
-      <label for="price">Price:</label>
-      <input type="text" id="price" name="price" value="{{ total_price }}" readonly><br><br>
-
-      <label for="your_name">Your Name:</label>
-      <input type="text" id="your_name" name="your_name" required><br><br>
-
-      <label for="contact_details">Contact Details:</label>
-      <input type="text" id="contact_details" name="contact_details" required><br><br>
-
-      <label for="address">Address:</label>
-      <input type="text" id="address" name="address" required><br><br>
-
-      <label for="payment_method">Payment Method:</label>
-      <select id="payment_method" name="payment_method" required>
-          <option value="Credit Card">Credit Card</option>
-          <option value="Debit Card">Debit Card</option>
-          <option value="G-Cash">G-Cash</option>
-          <option value="PayPal">PayPal</option>
-      </select><br><br>
-
-      <label for="proof_of_payment">Proof of Payment:</label>
-      <input type="file" id="proof_of_payment" name="proof_of_payment" accept="image/*" required><br><br>
-
-    <h3>Are you sure you want to make this purchase?</h3>
-      <input type="submit" value="Yes">
-        <a href="/item/{{ product[0] }}">No</a>
-    </form>
+    <label for="your_name">Your Name</label>
+    <input class= "order-item" type="text" name="your_name" id="your_name" value="First Name Last Name" required><br><br>
+    <label for="contact_details">Contact Details</label>
+    <input class= "order-item" type="text" name="contact_details" id="contact_details" value ="Ex: yourname@email.com" required><br><br>
+    <label for="address">Address</label>
+    <input class= "order-item" type="text" name="address" id="address" value="Landmark/House No./Street Name/Barangay/Municipality/Province" required><br><br>
+    <label for="proof_of_payment">Proof of Payment</label>
+    <input class= "order-item" type="file" name="proof_of_payment" id="proof_of_payment" accept=".jpg, .jpeg" required><br><br>
+    <input type="submit" value="Proceed">
+  </form>
+</div>
 {% endblock %}

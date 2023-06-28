@@ -92,23 +92,6 @@ def check_stock(item_id, size):
     conn.close()
     return result[0] if result else 0
 
-def create_purchase(product_name, size, quantity, price, your_name, contact_details, address, proof_of_payment):
-    conn, cur = connect_to_db(db_path)
-    query = "INSERT INTO purchased (Product_Name, Size, Quantity, Price, Your_Name, Contact_Details, Address, Proof_of_Payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    values = (
-        product_name,
-        size,
-        quantity,
-        price,
-        your_name,
-        contact_details,
-        address,
-        proof_of_payment
-    )
-    cur.execute(query, values)
-    conn.commit()
-    conn.close()
-
 def insert_item_into_db(name, size, price, description, image_filename, stock):
     conn, cur = connect_to_db(db_path)
     query = 'INSERT INTO items (name, size, price, description, image_filename, stock) VALUES (?, ?, ?, ?, ?, ?)'
@@ -124,3 +107,34 @@ def get_sizes_by_name(name):
     results = cur.execute(query, (value,)).fetchall()
     conn.close()
     return [{'id': result['id'], 'size': result['size']} for result in results]
+
+def create_purchase(purchase_data):
+    conn, cur = connect_to_db(db_path)
+    query = 'INSERT INTO purchases (product_name, size, price, your_name, contact_details, address, proof_of_payment) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    values = (
+        purchase_data['product_name'],
+        purchase_data['size'],
+        purchase_data['price'],
+        purchase_data['your_name'],
+        purchase_data['contact_details'],
+        purchase_data['address'],
+        purchase_data['proof_of_payment']
+    )
+    cur.execute(query, values)
+    conn.commit()
+    conn.close()
+
+def get_all_purchases():
+    conn, cur = connect_to_db(db_path)
+    query = 'SELECT * FROM purchases'
+    results = cur.execute(query).fetchall()
+    conn.close()
+    return results
+
+def decrease_stock(item_id, size):
+    conn, cur = connect_to_db(db_path)
+    query = "UPDATE items SET stock = stock - 1 WHERE id = ? AND size = ?"
+    values = (item_id, size)
+    cur.execute(query, values)
+    conn.commit()
+    conn.close()

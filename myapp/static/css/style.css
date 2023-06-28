@@ -274,8 +274,16 @@ div.desc {
   width: auto;
 }
 
-#quantity {
-  width: 35px;
-}
 
 /* Buy */
+
+#order {
+  padding: 20px;
+  background-color: #8f44a1;
+  color: whitesmoke;
+
+}
+
+.order-item {
+  width: 800px;
+}
