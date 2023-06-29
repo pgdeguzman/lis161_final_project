@@ -31,6 +31,16 @@
         </p>  
     </p>
 </div>
+<div class="indent" id="login">
+    <hr><hr><hr><hr><hr><br>
+{% if session.logged_in %}
+{% else %}
+    <p><strong><i>Are you the owner? Login now!</i></strong></p>
+    <form action="{{ url_for('login') }}" method="post">
+    <input class="btn btn-secondary" type="submit" name="action" value="login"></input>
+    </form>
+{% endif %}
+</div>
 
 </body>
 {% endblock %}

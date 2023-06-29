@@ -3,20 +3,20 @@
 {% block content %}
 <div id="order">
   <h2>Order Form</h2><hr><br>
-  <form action="{{ url_for('purchase_success') }}" method="POST" enctype="multipart/form-data">
+  <form action="{{ url_for('buy') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_name" value="{{ product_name }}">
-    <input type="hidden" name="size" value="{{ size }}">
-    <input type="hidden" name="price" value="{{ price }}">
+    <input type="hidden" name="product_size" value="{{ product_size }}">
+    <input type="hidden" name="product_price" value="{{ product_price }}">
 
     <label for="your_name">Your Name</label>
-    <input class= "order-item" type="text" name="your_name" id="your_name" value="First Name Last Name" required><br><br>
+    <input class="order-item" type="text" name="your_name" id="your_name" value="First Name Last Name"><br><br>
     <label for="contact_details">Contact Details</label>
-    <input class= "order-item" type="text" name="contact_details" id="contact_details" value ="Ex: yourname@email.com" required><br><br>
+    <input class="order-item" type="text" name="contact_details" id="contact_details" value ="Ex: yourname@email.com" required><br><br>
     <label for="address">Address</label>
-    <input class= "order-item" type="text" name="address" id="address" value="Landmark/House No./Street Name/Barangay/Municipality/Province" required><br><br>
+    <input class="order-item" type="text" name="address" id="address" value="Landmark/House No./Street Name/Barangay/Municipality/Province" required><br><br>
     <label for="proof_of_payment">Proof of Payment</label>
-    <input class= "order-item" type="file" name="proof_of_payment" id="proof_of_payment" accept=".jpg, .jpeg" required><br><br>
-    <input type="submit" value="Proceed">
+    <input class="order-item" type="file" name="proof_of_payment" id="proof_of_payment" accept=".jpg, .jpeg" required><br><br>
+    <input type="submit" value="Buy">
   </form>
 </div>
 {% endblock %}

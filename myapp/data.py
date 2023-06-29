@@ -54,7 +54,7 @@ def update_item(product_data):
         product_data['size'],
         product_data['image_filename'],
         product_data['description'],
-        product_data['product_id'],
+        product_data['product_id']
     )
     cur.execute(query, values)
     conn.commit()
@@ -110,15 +110,15 @@ def get_sizes_by_name(name):
 
 def create_purchase(purchase_data):
     conn, cur = connect_to_db(db_path)
-    query = 'INSERT INTO purchases (product_name, size, price, your_name, contact_details, address, proof_of_payment) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    query = 'INSERT INTO purchases (product_name, product_size, product_price, your_name, contact_details, address, proof_of_payment_filename) VALUES (?, ?, ?, ?, ?, ?, ?)'
     values = (
         purchase_data['product_name'],
-        purchase_data['size'],
-        purchase_data['price'],
+        purchase_data['product_size'],
+        purchase_data['product_price'],
         purchase_data['your_name'],
         purchase_data['contact_details'],
         purchase_data['address'],
-        purchase_data['proof_of_payment']
+        purchase_data['proof_of_payment_filename']
     )
     cur.execute(query, values)
     conn.commit()
@@ -126,10 +126,27 @@ def create_purchase(purchase_data):
 
 def get_all_purchases():
     conn, cur = connect_to_db(db_path)
-    query = 'SELECT * FROM purchases'
-    results = cur.execute(query).fetchall()
+    query = """
+    SELECT *,
+           "/static/img/" || proof_of_payment_filename AS proof_of_payment
+    FROM purchases
+    ORDER BY id DESC
+    LIMIT 1
+    """
+    result = cur.execute(query).fetchone()
     conn.close()
-    return results
+    if result:
+        return {
+            'product_name': result['product_name'],
+            'product_size': result['product_size'],
+            'product_price': result['product_price'],
+            'your_name': result['your_name'],
+            'contact_details': result['contact_details'],
+            'address': result['address'],
+            'proof_of_payment': result['proof_of_payment']
+        }
+    else:
+        return None
 
 def decrease_stock(item_id, size):
     conn, cur = connect_to_db(db_path)

@@ -111,7 +111,7 @@ def register():
         
         flash('Item added successfully!')
         
-        return redirect(url_for('register'))
+        return redirect(url_for('products'))
 
     return render_template('register.html')
 
@@ -169,43 +169,44 @@ def update():
 @app.route('/buy', methods=['GET', 'POST'])
 def buy():
     if request.method == 'POST':
-        product_name = request.args.get('product_name')
-        size = request.args.get('size')
-        price = request.args.get('price')
+        product_name = request.form['product_name']
+        product_size = request.form['product_size']
+        product_price = request.form['product_price']
         your_name = request.form.get('your_name')
         contact_details = request.form.get('contact_details')
         address = request.form.get('address')
         proof_of_payment = request.files.get('proof_of_payment')
 
-        if proof_of_payment:
-            image_filename = secure_filename(proof_of_payment.filename)
-            image_path = os.path.join(app.root_path, 'static/img', image_filename)
-            proof_of_payment.save(image_path)
-        else:
-            image_filename = None
+        if not your_name or not contact_details or not address or not proof_of_payment:
+            flash('Please fill in all required fields.')
+            return redirect(request.url)
 
-        create_purchase(purchase_data = { 
-                'product_name': product_name,
-                'size': size,
-                'price': price,
-                'your_name': your_name,
-                'contact_details': contact_details,
-                'address' : address,
-                'proof_of_payment' : image_filename
-            })
+        proof_of_payment_filename = secure_filename(proof_of_payment.filename)
+        image_path = os.path.join(app.root_path, 'static/img', proof_of_payment_filename)
+        proof_of_payment.save(image_path)
 
-        return redirect(url_for('buy'))
+        create_purchase(purchase_data={
+            'product_name': product_name,
+            'product_size': product_size,
+            'product_price': product_price,
+            'your_name': your_name,
+            'contact_details': contact_details,
+            'address': address,
+            'proof_of_payment_filename': proof_of_payment_filename
+        })
+
+        flash('Item purchased successfully!')
+        return redirect(url_for('purchase_success'))
 
     product_name = request.args.get('product_name')
-    size = request.args.get('size')
-    price = request.args.get('price')
-    return render_template('buy.html', product_name=product_name, size=size, price=price)
+    product_size = request.args.get('product_size') 
+    product_price = request.args.get('product_price')
+    return render_template('buy.html', product_name=product_name, product_size=product_size, product_price=product_price)
 
 @app.route('/purchase_success', methods=['GET', 'POST'])
 def purchase_success():
-    purchases = get_all_purchases()
-    return render_template('purchase_success.html', purchases=purchases)
-
+    purchase = get_all_purchases()
+    return render_template('purchase_success.html', purchase=purchase)
 
 if __name__ == "__main__":
     app.run(debug=True)
