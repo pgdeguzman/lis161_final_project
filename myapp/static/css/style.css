@@ -6,6 +6,8 @@
   width: auto;
 }
 
+li::marker{font-size:0;}
+
 img{
   height: 100%;
   width: 100%;
