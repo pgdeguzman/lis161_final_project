@@ -1,6 +1,8 @@
 import sqlite3
+import os.path
 
-db_path = "items.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = (BASE_DIR + '\\items.db')
 
 def connect_to_db(path):
     conn = sqlite3.connect(path)
